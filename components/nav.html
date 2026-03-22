@@ -1,0 +1,35 @@
+<nav class="fixed w-full z-50 transition-all duration-500 py-8 border-b border-white/10 bg-gradient-to-b from-brand-dark/70 to-transparent" id="main-nav">
+    <div class="max-w-[1600px] mx-auto px-6 md:px-12 flex justify-between items-center relative z-50">
+        <a href="index.html" class="font-serif text-2xl md:text-3xl tracking-tight flex items-center gap-4 text-white group" id="logo-text">
+            <span class="w-10 h-[1px] bg-brand-gold hidden md:block group-hover:w-16 transition-all duration-500" id="logo-line"></span>
+            <span>AUBERGE <span class="italic font-light">Côté Rivière</span></span>
+        </a>
+        
+        <div class="hidden lg:flex items-center space-x-14 text-[11px] uppercase tracking-[0.25em] font-medium text-white" id="nav-links">
+            <a href="index.html" class="nav-item hover:text-brand-gold transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[1px] after:bg-brand-gold hover:after:w-full after:transition-all after:duration-300" data-fr="Accueil" data-en="Home">Accueil</a>
+            <a href="restaurant.html" class="nav-item hover:text-brand-gold transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[1px] after:bg-brand-gold hover:after:w-full after:transition-all after:duration-300" data-fr="Restaurant" data-en="Restaurant">Restaurant</a>
+            <a href="menu.html" class="nav-item hover:text-brand-gold transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[1px] after:bg-brand-gold hover:after:w-full after:transition-all after:duration-300" data-fr="Menus" data-en="Menus">Menus</a>
+            <a href="hotel.html" class="nav-item hover:text-brand-gold transition-colors duration-300 relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-[1px] after:bg-brand-gold hover:after:w-full after:transition-all after:duration-300" data-fr="L'Hôtel" data-en="Hotel">L'Hôtel</a>
+            <button onclick="toggleLanguage()" class="border border-white/30 px-4 py-2 hover:border-brand-gold hover:text-brand-gold transition-colors duration-300 rounded-sm">
+                <span id="lang-label">EN</span>
+            </button>
+        </div>
+
+        <button class="lg:hidden text-2xl text-white transition-transform duration-300 focus:outline-none p-2" id="mobile-toggle">
+            <i id="mobile-icon" class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <div id="mobile-menu" class="fixed inset-0 bg-brand-dark z-40 flex flex-col items-center justify-center space-y-8 text-white opacity-0 pointer-events-none transition-opacity duration-300">
+        <a href="index.html" class="text-2xl font-serif italic hover:text-brand-gold transition-colors tracking-wider" data-fr="Accueil" data-en="Home">Accueil</a>
+        <a href="restaurant.html" class="text-2xl font-serif italic hover:text-brand-gold transition-colors tracking-wider" data-fr="Restaurant" data-en="Restaurant">Restaurant</a>
+        <a href="menu.html" class="text-2xl font-serif italic hover:text-brand-gold transition-colors tracking-wider" data-fr="Menus & Carte" data-en="Menus & Card">Menus & Carte</a>
+        <a href="hotel.html" class="text-2xl font-serif italic hover:text-brand-gold transition-colors tracking-wider" data-fr="L'Hôtel" data-en="Hotel">L'Hôtel</a>
+        
+        <div class="w-12 h-[1px] bg-brand-gold/50 my-4"></div>
+        
+        <button onclick="toggleLanguage();" class="text-[10px] uppercase tracking-[0.3em] font-bold border border-white/30 px-8 py-4 hover:border-brand-gold hover:text-brand-gold transition-colors">
+            <span id="mobile-lang-label">SWITCH TO ENGLISH</span>
+        </button>
+    </div>
+</nav>

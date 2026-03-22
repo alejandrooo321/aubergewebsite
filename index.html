@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auberge Côté Rivière | Hôtel-Restaurant | Is-sur-Tille</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-gold': '#b08d57',
+                        'brand-dark': '#141515',
+                        'brand-cream': '#fbfaf8',
+                        'brand-olive': '#2a2f2c',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Cormorant Garamond', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .hero-zoom {
+            /* Smart Gradient: Darker at the top/bottom for text, clear in the middle for the building */
+            background-image: linear-gradient(to bottom, rgba(20, 21, 21, 0.7) 0%, rgba(20, 21, 21, 0.1) 40%, rgba(20, 21, 21, 0.1) 60%, rgba(20, 21, 21, 0.8) 100%), url('images/hero-home.avif');
+            background-size: cover;
+            background-position: center center;
+            animation: slowZoom 25s infinite alternate;
+        }
+        
+        /* Mobile Image Scaling & Positioning Fix */
+        @media (max-width: 768px) {
+            .hero-zoom {
+                background-position: center 30%; /* Shifts focus slightly up to keep the building in frame */
+            }
+        }
+
+        @keyframes slowZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.08); }
+        }
+        
+        /* Language Toggle Display */
+        .lang-en [data-lang="fr"] { display: none; }
+        .lang-en [data-lang="en"] { display: block; }
+        [data-lang="en"] { display: none; }
+        
+        /* Customizing Flatpickr */
+        .flatpickr-calendar { 
+            font-family: 'Inter', sans-serif; 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+            border: none !important;
+        }
+        .flatpickr-day.selected { background: #b08d57 !important; border-color: #b08d57 !important; }
+        
+        /* Scroll Reveal Utility */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-brand-cream text-brand-olive font-sans antialiased selection:bg-brand-gold selection:text-white">
+
+    <div id="nav-placeholder"></div>
+
+    <header class="relative h-[70vh] min-h-[500px] md:h-[95vh] md:min-h-[700px] w-full overflow-hidden bg-brand-dark flex flex-col justify-center items-center">
+        <div class="absolute inset-0 hero-zoom opacity-95"></div>
+        <div class="relative z-10 text-center text-white px-6 mt-16">
+            <span class="block text-brand-gold uppercase tracking-[0.4em] text-[10px] md:text-xs font-bold mb-6 opacity-0 animate-[fadeIn_1s_ease_forwards]" data-fr="Hôtel & Restaurant en Bourgogne" data-en="Hotel & Restaurant in Burgundy">Hôtel & Restaurant en Bourgogne</span>
+            <h1 class="text-6xl md:text-[130px] font-serif leading-none tracking-tighter mb-8 overflow-hidden font-light drop-shadow-lg">
+                <span class="block animate-[slideUp_1.2s_ease_out_0.2s_both]">Côté Rivière</span>
+            </h1>
+            <p class="max-w-xl mx-auto text-lg md:text-2xl font-serif font-light leading-relaxed opacity-90 italic animate-[fadeIn_1s_ease_forwards_0.8s_both]" data-fr="Une parenthèse délicate au temps qui passe..." data-en="A delicate interlude in the passage of time...">
+                Une parenthèse délicate au temps qui passe...
+            </p>
+        </div>
+    </header>
+
+    <div class="relative z-20 w-full max-w-5xl mx-auto px-6 -mt-16 mb-24">
+        <div class="bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col md:flex-row items-stretch border border-brand-olive/5">
+            <div class="w-full md:w-[35%] p-6 md:p-8 flex items-center border-b md:border-b-0 md:border-r border-brand-olive/10 group cursor-pointer hover:bg-brand-cream/50 transition">
+                <div class="flex flex-col w-full">
+                    <label class="text-[9px] uppercase tracking-[0.2em] text-brand-gold font-bold mb-2 cursor-pointer" data-fr="Arrivée" data-en="Check-in">Arrivée</label>
+                    <input id="date_deb" type="text" class="w-full bg-transparent focus:outline-none text-brand-olive font-serif text-2xl cursor-pointer" placeholder="Sélectionner..." readonly>
+                </div>
+                <i class="far fa-calendar-alt text-brand-olive/20 text-2xl group-hover:text-brand-gold transition"></i>
+            </div>
+
+            <div class="w-full md:w-[35%] p-6 md:p-8 flex items-center group cursor-pointer hover:bg-brand-cream/50 transition">
+                <div class="flex flex-col w-full">
+                    <label class="text-[9px] uppercase tracking-[0.2em] text-brand-gold font-bold mb-2 cursor-pointer" data-fr="Départ" data-en="Check-out">Départ</label>
+                    <input id="date_dep" type="text" class="w-full bg-transparent focus:outline-none text-brand-olive font-serif text-2xl cursor-pointer" placeholder="Sélectionner..." readonly>
+                </div>
+                <i class="far fa-calendar-check text-brand-olive/20 text-2xl group-hover:text-brand-gold transition"></i>
+            </div>
+
+            <div class="w-full md:w-[30%] bg-brand-olive hover:bg-brand-dark transition-colors duration-500">
+                <button id="submit-booking" class="w-full h-full min-h-[80px] text-brand-cream text-[11px] uppercase tracking-[0.3em] font-medium flex flex-col items-center justify-center gap-2 group p-4">
+                    <span data-fr="Réserver" data-en="Book Now">Réserver</span>
+                    <span class="w-8 h-[1px] bg-brand-gold group-hover:w-16 transition-all duration-500"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <section class="py-20 md:py-32 bg-brand-cream overflow-hidden">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+            
+            <div class="w-full lg:w-5/12 reveal">
+                <span class="text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold block mb-6 flex items-center gap-4">
+                    <span class="w-8 h-[1px] bg-brand-gold"></span>
+                    <span data-fr="Une auberge familiale à Is-sur-Tille" data-en="A family hostel in Is-sur-Tille">Une auberge familiale à Is-sur-Tille</span>
+                </span>
+                <h2 class="text-4xl md:text-6xl font-serif mb-8 italic leading-tight text-brand-dark">Auberge <br>Côté Rivière</h2>
+                
+                <div class="space-y-6 text-brand-olive/70 font-light leading-relaxed text-[15px]">
+                    <p data-fr="C’est aux portes de Dijon en Côte d’Or, nichée au cœur d’un écrin de verdure, que se cache une bâtisse construite à la fin du XIXe siècle. Au pied d’un cours d’eau et surplombant un parc d’un hectare, cette demeure de charme vous fait osciller entre les traits conservés d’un ancien corps de ferme et la douceur d’un modernisme bien pensé." data-en="At the gates of Dijon in the Côte d'Or, nestled in the heart of lush greenery, hides a building constructed at the end of the 19th century. At the foot of a stream and overlooking a one-hectare park, this charming residence makes you oscillate between the preserved features of an old farmhouse and the softness of well-thought-out modernism.">
+                        C’est aux portes de Dijon en Côte d’Or, nichée au cœur d’un écrin de verdure, que se cache une bâtisse construite à la fin du XIXe siècle. Au pied d’un cours d’eau et surplombant un parc d’un hectare, cette demeure de charme vous fait osciller entre les traits conservés d’un ancien corps de ferme et la douceur d’un modernisme bien pensé.
+                    </p>
+                    <p data-fr="Maria et Pierre Franchomme succèdent au couple Lagrue qui a su redonner vie à cette superbe demeure. Amoureux du terroir bourguignon mais avec toujours en tête leurs nombreux voyages et expériences, c'est tout cela qu'ils veulent offrir à leurs clients." data-en="Maria and Pierre Franchomme succeed the Lagrue couple who brought this superb residence back to life. Lovers of the Burgundy terroir but always keeping in mind their numerous travels and experiences, this is what they want to offer their clients.">
+                        Maria et Pierre Franchomme succèdent au couple Lagrue qui a su redonner vie à cette superbe demeure. Amoureux du terroir bourguignon mais avec toujours en tête leurs nombreux voyages et expériences, c'est tout cela qu'ils veulent offrir à leurs clients.
+                    </p>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-7/12 relative h-[500px] md:h-[700px] reveal">
+                <picture>
+                    <source srcset="images/story-main.avif" type="image/avif">
+                    <img src="images/story-main.jpg" alt="Exterior or Park" class="absolute right-0 top-0 w-3/4 h-[80%] object-cover shadow-2xl z-10">
+                </picture>
+                <picture>
+                    <source srcset="images/story-detail.avif" type="image/avif">
+                    <img src="images/story-detail.jpg" alt="Detail shot" class="absolute left-0 bottom-0 w-1/2 h-[60%] object-cover shadow-2xl z-20 border-8 border-brand-cream">
+                </picture>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="bg-white">
+        <div class="flex flex-col lg:flex-row min-h-[600px]">
+            <div class="w-full lg:w-1/2 relative min-h-[400px]">
+                <picture>
+                    <source srcset="images/hero-restaurant.webp" type="image/avif">
+                    <img src="images/hero-restaurant.jpg" alt="Restaurant Côté Rivière" class="absolute inset-0 w-full h-full object-cover">
+                </picture>
+            </div>
+            <div class="w-full lg:w-1/2 flex items-center p-12 lg:p-24 bg-brand-olive text-white reveal">
+                <div class="max-w-md mx-auto lg:mx-0">
+                    <span class="text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold block mb-4" data-fr="Cuisine du marché" data-en="Local cuisine">Cuisine du marché</span>
+                    <h3 class="text-4xl md:text-5xl font-serif italic mb-6">Restaurant</h3>
+                    <p class="font-light leading-relaxed mb-10 text-white/80" data-fr="Côté gastronomie, vous serez séduits par les plats du restaurant Côté Rivière. Retrouvez les spécialités régionales que le chef se plait à revisiter en y apportant sa touche d’originalité et de modernisme." data-en="In terms of gastronomy, you will be seduced by the dishes of the Côté Rivière restaurant. Find regional specialties that the chef likes to revisit by bringing his touch of originality and modernism.">
+                        Côté gastronomie, vous serez séduits par les plats du restaurant Côté Rivière. Retrouvez les spécialités régionales que le chef se plait à revisiter en y apportant sa touche d’originalité et de modernisme.
+                    </p>
+                    <a href="restaurant.html" class="inline-flex items-center gap-4 text-[10px] uppercase tracking-[0.2em] font-bold text-white hover:text-brand-gold transition group">
+                        <span data-fr="Menu & carte" data-en="Menu">Menu & carte</span>
+                        <i class="fas fa-long-arrow-alt-right transform group-hover:translate-x-2 transition-transform"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col-reverse lg:flex-row min-h-[600px]">
+            <div class="w-full lg:w-1/2 flex items-center p-12 lg:p-24 bg-brand-cream reveal">
+                <div class="max-w-md mx-auto lg:ml-auto lg:mr-0">
+                    <span class="text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold block mb-4" data-fr="Hôtel de charme" data-en="Charming hotel">Hôtel de charme</span>
+                    <h3 class="text-4xl md:text-5xl font-serif italic mb-6 text-brand-dark">Hôtel</h3>
+                    <p class="font-light leading-relaxed mb-10 text-brand-olive/80" data-fr="Des chambres de caractères vous offrent une parenthèse délicate au temps qui passe... Traversez le pont et venez découvrir 10 chambres au nom évoquant la douce campagne environnante." data-en="Characterful rooms offer you a delicate interlude in the passage of time... Cross the bridge and discover 10 rooms with names evoking the gentle surrounding countryside.">
+                        Des chambres de caractères vous offrent une parenthèse délicate au temps qui passe... Traversez le pont et venez découvrir 10 chambres au nom évoquant la douce campagne environnante.
+                    </p>
+                    <a href="hotel.html" class="inline-flex items-center gap-4 text-[10px] uppercase tracking-[0.2em] font-bold text-brand-dark hover:text-brand-gold transition group">
+                        <span data-fr="Chambres" data-en="Bedrooms">Chambres</span>
+                        <i class="fas fa-long-arrow-alt-right transform group-hover:translate-x-2 transition-transform"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2 relative min-h-[400px]">
+                <picture>
+                    <source srcset="images/hero-hotel.webp" type="image/avif">
+                    <img src="images/hero-hotel.jpg" alt="Chambres Auberge Côté Rivière" class="absolute inset-0 w-full h-full object-cover">
+                </picture>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

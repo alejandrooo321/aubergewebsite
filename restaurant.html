@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant | Auberge Côté Rivière</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = { theme: { extend: { colors: { 'brand-gold': '#b08d57', 'brand-dark': '#141515', 'brand-cream': '#fbfaf8', 'brand-olive': '#2a2f2c' }, fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Cormorant Garamond', 'serif'] } } } }
+    </script>
+
+    <style>
+        .hero-zoom {
+            /* Smart Gradient & Local Image Placeholder */
+            background-image: linear-gradient(to bottom, rgba(20, 21, 21, 0.7) 0%, rgba(20, 21, 21, 0.1) 40%, rgba(20, 21, 21, 0.1) 60%, rgba(20, 21, 21, 0.8) 100%), url('images/hero-restaurant-1.webp');
+            background-size: cover; 
+            background-position: center center; 
+            animation: slowZoom 25s infinite alternate;
+        }
+        
+        /* Mobile Image Scaling Fix */
+        @media (max-width: 768px) {
+            .hero-zoom { background-position: center 30%; }
+        }
+
+        @keyframes slowZoom { from { transform: scale(1); } to { transform: scale(1.08); } }
+        
+        .lang-en [data-lang="fr"] { display: none; } 
+        .lang-en [data-lang="en"] { display: block; } 
+        [data-lang="en"] { display: none; }
+        
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); } 
+        .reveal.active { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body class="bg-brand-cream text-brand-olive font-sans antialiased selection:bg-brand-gold selection:text-white">
+
+    <div id="nav-placeholder"></div>
+
+    <header class="relative h-[60vh] min-h-[400px] md:h-[75vh] md:min-h-[600px] w-full overflow-hidden bg-brand-dark flex flex-col justify-center items-center">
+        <div class="absolute inset-0 hero-zoom opacity-90"></div>
+        <div class="relative z-10 text-center text-white px-6 mt-16">
+            <span class="block text-brand-gold uppercase tracking-[0.4em] text-[10px] md:text-xs font-bold mb-6 opacity-0 animate-[fadeIn_1s_ease_forwards] drop-shadow-md" data-fr="À proximité de Dijon, Bourgogne" data-en="Near Dijon, Burgundy">À proximité de Dijon, Bourgogne</span>
+            <h1 class="text-6xl md:text-[100px] font-serif leading-none tracking-tighter mb-8 overflow-hidden font-light drop-shadow-lg">
+                <span class="block animate-[slideUp_1.2s_ease_out_0.2s_both]" data-fr="Restaurant" data-en="Restaurant">Restaurant</span>
+            </h1>
+            <p class="max-w-xl mx-auto text-lg md:text-2xl font-serif font-light leading-relaxed opacity-90 italic animate-[fadeIn_1s_ease_forwards_0.8s_both] drop-shadow-md" data-fr="Auberge Côté Rivière à Is-sur-Tille" data-en="Auberge Côté Rivière in Is-sur-Tille">
+                Auberge Côté Rivière à Is-sur-Tille
+            </p>
+        </div>
+    </header>
+
+    <section class="py-24 md:py-32 bg-brand-cream border-b border-brand-olive/5">
+        <div class="max-w-[900px] mx-auto px-6 text-center reveal">
+            <i class="fas fa-leaf text-brand-gold text-2xl mb-8 opacity-80"></i>
+            <h2 class="text-3xl md:text-4xl font-serif italic mb-8 leading-relaxed text-brand-dark" data-fr="Maria et Pierre Franchomme ainsi que toute leur équipe vous accueillent au sein de leur restaurant familial pour une parenthèse gourmande autour de la cuisine du marché." data-en="Maria and Pierre Franchomme, along with their entire team, welcome you to their family restaurant for a gourmet interlude centered around market cuisine.">
+                Maria et Pierre Franchomme ainsi que toute leur équipe vous accueillent au sein de leur restaurant familial pour une parenthèse gourmande autour de la cuisine du marché.
+            </h2>
+            <p class="text-brand-olive/70 font-light leading-relaxed text-lg" data-fr="Une cuisine locale, des produits du terroir, une carte des vins élaborées avec soin, le tout accompagné d'un accueil et service chaleureux." data-en="Local cuisine, regional products, a carefully crafted wine list, all accompanied by a warm welcome and service.">
+                Une cuisine locale, des produits du terroir, une carte des vins élaborées avec soin, le tout accompagné d'un accueil et service chaleureux.
+            </p>
+        </div>
+    </section>
+
+    <section class="bg-white">
+        
+        <div class="flex flex-col lg:flex-row min-h-[600px]">
+            <div class="w-full lg:w-1/2 relative min-h-[400px]">
+                <img src="images/restaurant-terroir.avif" alt="Cuisine du terroir" class="absolute inset-0 w-full h-full object-cover bg-brand-olive/10">
+            </div>
+            <div class="w-full lg:w-1/2 flex items-center p-12 lg:p-24 bg-brand-cream reveal">
+                <div class="max-w-md mx-auto lg:mx-0">
+                    <span class="text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold block mb-4 flex items-center gap-4">
+                        <span class="w-6 h-[1px] bg-brand-gold"></span>
+                        <span data-fr="Menu & Carte" data-en="Menu & Card">Menu & Carte</span>
+                    </span>
+                    <h3 class="text-4xl md:text-5xl font-serif italic mb-6 text-brand-dark" data-fr="Cuisine du terroir" data-en="Local Cuisine">Cuisine du terroir</h3>
+                    <p class="font-light leading-relaxed mb-10 text-brand-olive/80" data-fr="La Bourgogne offre un merveilleux panel de produits travaillés avec soin par nos producteurs. Tous nous fournissent le meilleur des cultures et élevages toujours avec passion. Sans oublier les truffes, mises en valeur par le chef à travers ses recettes." data-en="Burgundy offers a wonderful range of products carefully crafted by our producers. They all provide us with the best of crops and livestock, always with passion. Not forgetting truffles, highlighted by the chef through his recipes.">
+                        La Bourgogne offre un merveilleux panel de produits travaillés avec soin par nos producteurs. Tous nous fournissent le meilleur des cultures et élevages toujours avec passion. Sans oublier les truffes, mises en valeur par le chef à travers ses recettes.
+                    </p>
+                    <a href="menu.html" class="inline-flex items-center justify-center gap-4 text-[10px] uppercase tracking-[0.2em] font-bold text-white bg-brand-olive px-8 py-4 hover:bg-brand-gold transition-colors duration-300">
+                        <span data-fr="Voir le Menu" data-en="View the Menu">Voir le Menu</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col-reverse lg:flex-row min-h-[600px]">
+            <div class="w-full lg:w-1/2 flex items-center p-12 lg:p-24 bg-brand-dark text-white reveal">
+                <div class="max-w-lg mx-auto lg:ml-auto lg:mr-0">
+                    <span class="text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold block mb-4 flex items-center gap-4">
+                        <span class="w-6 h-[1px] bg-brand-gold"></span>
+                        <span data-fr="Notre Cave" data-en="Our Cellar">Notre Cave</span>
+                    </span>
+                    <h3 class="text-4xl md:text-5xl font-serif italic mb-6" data-fr="Vins de Bourgogne Et D'ailleurs" data-en="Wines from Burgundy & Beyond">Vins de Bourgogne Et D'ailleurs</h3>
+                    <p class="font-light leading-relaxed mb-6 text-white/80" data-fr="La carte des vins est principalement axée sur les climats de Côtes de Nuits et Côtes de Beaune, mais aussi la découverte d'autres terroirs. De très beaux domaines y sont représentés comme de véritables coup de cœur sélectionnés par notre sommelier Josselyn..." data-en="The wine list is mainly focused on the climates of Côtes de Nuits and Côtes de Beaune, but also the discovery of other terroirs...">
+                        La carte des vins est principalement axée sur les climats de Côtes de Nuits et Côtes de Beaune, mais aussi la découverte d'autres terroirs. De très beaux domaines y sont représentés comme de véritables coup de cœur sélectionnés par notre sommelier Josselyn : Domaine Vaudoisey, Domaine Latour, Domaine Guerrin et Fils, Domaine Vincent Prunier, Domaine Jean Luc Colombo...
+                    </p>
+                    <p class="font-light leading-relaxed text-white/80" data-fr="Vous pouvez également venir découvrir notre séléction de spiritueux bourguignon et le talent de nos distillateurs..." data-en="You can also come and discover our selection of Burgundy spirits...">
+                        Vous pouvez également venir découvrir notre séléction de spiritueux bourguignon et le talent de nos distillateurs comme Cyril Guyon "Le secret de l'herbier", Charles Guillaume Simon "Clos Saint Joseph", Baptiste Debeaumont "DB27".
+                    </p>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2 relative min-h-[400px]">
+                <img src="images/restaurant-vins.webp" alt="Vins de Bourgogne" class="absolute inset-0 w-full h-full object-cover bg-brand-olive/10">
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row min-h-[600px]">
+            <div class="w-full lg:w-1/2 relative min-h-[400px]">
+                <img src="images/restaurant-reunion.avif" alt="Salle de réunion et cheminée" class="absolute inset-0 w-full h-full object-cover bg-brand-olive/10">
+            </div>
+            <div class="w-full lg:w-1/2 flex items-center p-12 lg:p-24 bg-brand-cream reveal">
+                <div class="max-w-md mx-auto lg:mx-0">
+                    <span class="text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold block mb-4 flex items-center gap-4">
+                        <span class="w-6 h-[1px] bg-brand-gold"></span>
+                        <span data-fr="Événements Privés" data-en="Private Events">Événements Privés</span>
+                    </span>
+                    <h3 class="text-4xl md:text-5xl font-serif italic mb-6 text-brand-dark" data-fr="Salle de réunion & Salon Cosy" data-en="Meeting Room & Cozy Lounge">Salle de réunion & Salon Cosy</h3>
+                    <p class="font-light leading-relaxed mb-6 text-brand-olive/80" data-fr="Salon cosy autour d'une cheminée centrale dans laquelle il est possible de vous accueillir pour des repas de famille ou des réunions, à hauteur de 25 personnes maximum." data-en="Cozy lounge around a central fireplace where we can welcome you for family meals or meetings, up to a maximum of 25 people.">
+                        Salon cosy autour d'une cheminée centrale dans laquelle il est possible de vous accueillir pour des repas de famille ou des réunions, à hauteur de 25 personnes maximum.
+                    </p>
+                    <a href="mailto:contact@aubergecoteriviere.fr" class="mt-10 inline-flex items-center gap-4 text-[10px] uppercase tracking-[0.2em] font-bold text-brand-dark hover:text-brand-gold transition group">
+                        <span data-fr="Nous Contacter pour Réserver" data-en="Contact Us to Book">Nous Contacter pour Réserver</span>
+                        <i class="fas fa-long-arrow-alt-right transform group-hover:translate-x-2 transition-transform"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Hôtel | Auberge Côté Rivière | Is-sur-Tille</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'brand-gold': '#b08d57', 'brand-dark': '#141515', 'brand-cream': '#fbfaf8', 'brand-olive': '#2a2f2c' },
+                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Cormorant Garamond', 'serif'] }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .hero-zoom {
+            background-image: linear-gradient(to bottom, rgba(20, 21, 21, 0.6) 0%, rgba(20, 21, 21, 0.2) 50%, rgba(20, 21, 21, 0.8) 100%), url('images/aubergedrone.webp');
+            background-size: cover; background-position: center; animation: slowZoom 25s infinite alternate;
+        }
+        @keyframes slowZoom { from { transform: scale(1); } to { transform: scale(1.08); } }
+        
+        .lang-en [data-lang="fr"] { display: none; } .lang-en [data-lang="en"] { display: block; } [data-lang="en"] { display: none; }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); } .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Enhanced Slider Styling */
+        .room-slider img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.8s ease-in-out; }
+        .room-slider img.active { opacity: 1; }
+        .slider-nav { opacity: 0; transition: opacity 0.3s ease; }
+        .room-slider:hover .slider-nav { opacity: 1; }
+        .room-legend { transition: opacity 0.4s ease; }
+        .room-legend.fade-out { opacity: 0; }
+        .flatpickr-day.selected { background: #b08d57 !important; border-color: #b08d57 !important; }
+    </style>
+</head>
+<body class="bg-brand-cream text-brand-olive font-sans antialiased selection:bg-brand-gold selection:text-white">
+
+    <div id="nav-placeholder"></div>
+
+    <header class="relative h-[65vh] min-h-[500px] w-full overflow-hidden bg-brand-dark flex flex-col justify-center items-center">
+        <div class="absolute inset-0 hero-zoom opacity-90"></div>
+        <div class="relative z-10 text-center text-white px-6 mt-16">
+            <span class="block text-brand-gold uppercase tracking-[0.4em] text-[10px] md:text-xs font-bold mb-6 opacity-0 animate-[fadeIn_1s_ease_forwards]" data-fr="Détente & Nature" data-en="Relaxation & Nature">Détente & Nature</span>
+            <h1 class="text-6xl md:text-[100px] font-serif leading-none tracking-tighter mb-8 overflow-hidden font-light drop-shadow-lg">
+                <span class="block animate-[slideUp_1.2s_ease_out_0.2s_both]">L'Hôtel</span>
+            </h1>
+        </div>
+    </header>
+
+    <div class="relative z-20 w-full max-w-5xl mx-auto px-6 -mt-16 mb-24">
+        <div class="bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] flex flex-col md:flex-row items-stretch border border-brand-olive/5">
+            <div class="w-full md:w-[35%] p-6 flex items-center border-b md:border-b-0 md:border-r border-brand-olive/10 group cursor-pointer hover:bg-brand-cream/50 transition">
+                <div class="flex flex-col w-full">
+                    <label class="text-[9px] uppercase tracking-[0.2em] text-brand-gold font-bold mb-1">Arrivée</label>
+                    <input id="date_deb" type="text" class="w-full bg-transparent focus:outline-none text-brand-olive font-serif text-xl cursor-pointer" placeholder="Choisir..." readonly>
+                </div>
+            </div>
+            <div class="w-full md:w-[35%] p-6 flex items-center group cursor-pointer hover:bg-brand-cream/50 transition">
+                <div class="flex flex-col w-full">
+                    <label class="text-[9px] uppercase tracking-[0.2em] text-brand-gold font-bold mb-1">Départ</label>
+                    <input id="date_dep" type="text" class="w-full bg-transparent focus:outline-none text-brand-olive font-serif text-xl cursor-pointer" placeholder="Choisir..." readonly>
+                </div>
+            </div>
+            <div class="w-full md:w-[30%] bg-brand-olive hover:bg-brand-dark transition-colors duration-500">
+                <button onclick="openBooking()" class="w-full h-full min-h-[80px] text-brand-cream text-[11px] uppercase tracking-[0.3em] font-medium flex flex-col items-center justify-center gap-2 group p-4">
+                    <span data-fr="Vérifier la disponibilité" data-en="Check Availability">Vérifier la disponibilité</span>
+                    <span class="w-8 h-[1px] bg-brand-gold group-hover:w-16 transition-all duration-500"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <section class="py-24 bg-brand-cream border-b border-brand-olive/5">
+        <div class="max-w-[1000px] mx-auto px-6 md:px-12 text-center reveal">
+            <i class="fas fa-key text-brand-gold text-2xl mb-8 opacity-80"></i>
+            <h2 class="text-3xl md:text-4xl font-serif italic mb-8 leading-relaxed text-brand-dark" data-fr="Des chambres de caractères vous offrent une parenthèse délicate au temps qui passe..." data-en="Characterful rooms offer you a delicate interlude in the passage of time...">
+                Des chambres de caractères vous offrent une parenthèse délicate au temps qui passe... Traversez le pont et venez découvrir 10 chambres au nom évoquant la douce campagne environnante.
+            </h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-brand-olive/10 pt-16 mt-12">
+                <div class="flex flex-col items-center"><i class="fas fa-parking text-2xl text-brand-gold mb-4"></i><span class="text-[10px] uppercase tracking-widest font-bold">Parking Privé</span></div>
+                <div class="flex flex-col items-center"><i class="fas fa-wifi text-2xl text-brand-gold mb-4"></i><span class="text-[10px] uppercase tracking-widest font-bold">Wi-Fi Gratuit</span></div>
+                <div class="flex flex-col items-center"><i class="fas fa-paw text-2xl text-brand-gold mb-4"></i><span class="text-[10px] uppercase tracking-widest font-bold">Animaux Acceptés</span></div>
+                <div class="flex flex-col items-center"><i class="fas fa-elevator text-2xl text-brand-gold mb-4"></i><span class="text-[10px] uppercase tracking-widest font-bold">Ascenseur</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-white overflow-hidden">
+        
+        <div class="flex flex-col lg:flex-row min-h-[600px]">
+            <div class="w-full lg:w-1/2 relative min-h-[500px] room-slider group" data-current="0">
+                <img src="images/rooms/room-confort-1.avif" alt="Chambre" class="active" data-cap-fr="Chambre Double Confort" data-cap-en="Double Comfort Room">
+                <img src="images/rooms/room-confort-1-2.avif" alt="Vue Chambre" data-cap-fr="Espace de vie" data-cap-en="Living space">
+                <img src="images/rooms/room-confort-bath.avif" alt="Bain" data-cap-fr="Salle de douche" data-cap-en="Shower room">
+                <img src="images/rooms/room-confort-pmr.avif" alt="PMR" data-cap-fr="Chambre adaptée PMR" data-cap-en="PRM Accessible room">
+                <img src="images/rooms/room-confort-pmr-2.avif" alt="PMR Détail" data-cap-fr="Équipements PMR" data-cap-en="PRM Facilities">
+                
+                <div class="absolute inset-0 flex items-center justify-between px-4 slider-nav z-20">
+                    <button onclick="changeSlide(this, -1)" class="w-10 h-10 bg-black/20 hover:bg-black/40 text-white rounded-full transition backdrop-blur-sm"><i class="fas fa-chevron-left text-xs"></i></button>
+                    <button onclick="changeSlide(this, 1)" class="w-10 h-10 bg-black/20 hover:bg-black/40 text-white rounded-full transition backdrop-blur-sm"><i class="fas fa-chevron-right text-xs"></i></button>
+                </div>
+                <div class="absolute bottom-6 left-6 z-30 flex items-end gap-4">
+                    <span class="room-legend bg-brand-dark/70 backdrop-blur-md text-white text-[10px] uppercase tracking-[0.2em] px-4 py-2 border-l-2 border-brand-gold">Chambre Double Confort</span>
+                    <span class="slide-counter text-[10px] text-white/50 font-medium mb-2 tracking-widest">1 / 5</span>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2 flex items-center p-12 lg:p-24 bg-brand-cream reveal">
+                <div class="max-w-md mx-auto lg:mx-0">
+                    <div class="flex justify-between items-end mb-4">
+                        <span class="text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold">4 Chambres</span>
+                        <span class="font-serif text-2xl text-brand-dark">95€</span>
+                    </div>
+                    <h3 class="text-4xl md:text-5xl font-serif italic mb-6">Double Confort</h3>
+                    <p class="font-light leading-relaxed mb-6 text-brand-olive/80" data-fr="Lit double, salle de douche et WC séparé. Une chambre est totalement adaptée PMR." data-en="Double bed, shower room and separate WC. One room is fully PRM accessible.">Lit double, salle de douche et WC séparé. Une chambre est totalement adaptée PMR.</p>
+                    <button onclick="openBooking()" class="text-[10px] uppercase tracking-[0.2em] font-bold border-b border-brand-dark pb-1 hover:text-brand-gold transition-all">Réserver</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col-reverse lg:flex-row min-h-[600px]">
+            <div class="w-full lg:w-1/2 flex items-center p-12 lg:p-24 bg-brand-dark text-white reveal">
+                <div class="max-w-md mx-auto lg:ml-auto lg:mr-0">
+                    <div class="flex justify-between items-end mb-4 border-b border-white/10 pb-4">
+                        <span class="text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold">2 Chambres</span>
+                        <span class="font-serif text-2xl text-white">105€</span>
+                    </div>
+                    <h3 class="text-4xl md:text-5xl font-serif italic mb-6 text-brand-gold">Double Supérieure</h3>
+                    <p class="font-light leading-relaxed mb-10 text-white/80" data-fr="Lit double et salle de bain avec baignoire, WC séparé. Plus de volume et de lumière." data-en="Double bed and bathroom with bathtub, separate WC. More volume and natural light.">Lit double et salle de bain avec baignoire, WC séparé. Plus de volume et de lumière.</p>
+                    <button onclick="openBooking()" class="text-[10px] uppercase tracking-[0.2em] font-bold border-b border-brand-gold pb-1 hover:text-white transition-all">Réserver</button>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2 relative min-h-[500px] room-slider group" data-current="0">
+                <img src="images/rooms/room-superior-1.avif" alt="Supérieure" class="active" data-cap-fr="Chambre Double Supérieure" data-cap-en="Superior Double Room">
+                <img src="images/rooms/room-superior-1-2.avif" alt="Détail" data-cap-fr="Élégance & Confort" data-cap-en="Elegance & Comfort">
+                <img src="images/rooms/room-superior-2.avif" alt="Vue 2" data-cap-fr="Grand volume" data-cap-en="Spacious room">
+                <img src="images/rooms/room-superior-2-2.avif" alt="Espace" data-cap-fr="Ambiance sereine" data-cap-en="Serene atmosphere">
+                <img src="images/rooms/room-superior-bath.avif" alt="Bain" data-cap-fr="Salle de bain avec baignoire" data-cap-en="Bathroom with bathtub">
+                
+                <div class="absolute inset-0 flex items-center justify-between px-4 slider-nav z-20">
+                    <button onclick="changeSlide(this, -1)" class="w-10 h-10 bg-black/20 hover:bg-black/40 text-white rounded-full transition backdrop-blur-sm"><i class="fas fa-chevron-left text-xs"></i></button>
+                    <button onclick="changeSlide(this, 1)" class="w-10 h-10 bg-black/20 hover:bg-black/40 text-white rounded-full transition backdrop-blur-sm"><i class="fas fa-chevron-right text-xs"></i></button>
+                </div>
+                <div class="absolute bottom-6 left-6 z-30 flex items-end gap-4">
+                    <span class="room-legend bg-brand-dark/70 backdrop-blur-md text-white text-[10px] uppercase tracking-[0.2em] px-4 py-2 border-l-2 border-brand-gold">Double Supérieure</span>
+                    <span class="slide-counter text-[10px] text-white/50 font-medium mb-2 tracking-widest">1 / 5</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row min-h-[600px]">
+            <div class="w-full lg:w-1/2 relative min-h-[500px] room-slider group" data-current="0">
+                <img src="images/rooms/room-junior-1.avif" alt="Suite" class="active" data-cap-fr="Suite Junior" data-cap-en="Junior Suite">
+                <img src="images/rooms/room-junior-1-2.avif" alt="Salon" data-cap-fr="Espace salon & canapé" data-cap-en="Lounge area & sofa">
+                <img src="images/rooms/room-junior-bath.avif" alt="Bain" data-cap-fr="Douche et baignoire" data-cap-en="Shower and bathtub">
+                
+                <div class="absolute inset-0 flex items-center justify-between px-4 slider-nav z-20">
+                    <button onclick="changeSlide(this, -1)" class="w-10 h-10 bg-black/20 hover:bg-black/40 text-white rounded-full transition backdrop-blur-sm"><i class="fas fa-chevron-left text-xs"></i></button>
+                    <button onclick="changeSlide(this, 1)" class="w-10 h-10 bg-black/20 hover:bg-black/40 text-white rounded-full transition backdrop-blur-sm"><i class="fas fa-chevron-right text-xs"></i></button>
+                </div>
+                <div class="absolute bottom-6 left-6 z-30 flex items-end gap-4">
+                    <span class="room-legend bg-brand-dark/70 backdrop-blur-md text-white text-[10px] uppercase tracking-[0.2em] px-4 py-2 border-l-2 border-brand-gold">Suite Junior</span>
+                    <span class="slide-counter text-[10px] text-white/50 font-medium mb-2 tracking-widest">1 / 3</span>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2 flex items-center p-12 lg:p-24 bg-brand-cream reveal">
+                <div class="max-w-md mx-auto lg:mx-0">
+                    <div class="flex justify-between items-end mb-4">
+                        <span class="text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold">2 Suites</span>
+                        <span class="font-serif text-2xl text-brand-dark">145€</span>
+                    </div>
+                    <h3 class="text-4xl md:text-5xl font-serif italic mb-6">Suite Junior</h3>
+                    <p class="font-light leading-relaxed mb-6 text-brand-olive/80" data-fr="Lit double, canapé, salle de bain avec douche et baignoire, WC séparé." data-en="Double bed, sofa, bathroom with shower and bathtub, separate WC.">Lit double, canapé, salle de bain with shower and bathtub, separate WC.</p>
+                    <button onclick="openBooking()" class="text-[10px] uppercase tracking-[0.2em] font-bold border-b border-brand-dark pb-1">Réserver</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col-reverse lg:flex-row min-h-[600px]">
+            <div class="w-full lg:w-1/2 flex items-center p-12 lg:p-24 bg-brand-olive text-white reveal">
+                <div class="max-w-md mx-auto lg:ml-auto lg:mr-0">
+                    <div class="flex justify-between items-end mb-4 border-b border-white/10 pb-4">
+                        <span class="text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold">1 Suite (4 pers.)</span>
+                        <span class="font-serif text-2xl text-white">185€</span>
+                    </div>
+                    <h3 class="text-4xl md:text-5xl font-serif italic mb-6 text-brand-gold">Suite Familiale</h3>
+                    <p class="font-light leading-relaxed mb-10 text-white/80" data-fr="Chambre parentale (lit double) et chambre enfants (2 lits simples). Salle de bain et WC séparé." data-en="Master bedroom (double bed) and children's room (2 single beds). Bathroom and separate WC.">Chambre parentale (lit double) et chambre enfants (2 lits simples). Salle de bain et WC séparé.</p>
+                    <button onclick="openBooking()" class="text-[10px] uppercase tracking-[0.2em] font-bold border-b border-brand-gold pb-1 hover:text-white transition-all">Réserver</button>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2 relative min-h-[500px] room-slider group" data-current="0">
+                <img src="images/rooms/room-familial-1-2.avif" alt="Famille" class="active" data-cap-fr="Chambre parentale" data-cap-en="Master Bedroom">
+                <img src="images/rooms/room-familial-1.avif" alt="Enfants" data-cap-fr="Lits simples enfants" data-cap-en="Children's single beds">
+                <img src="images/rooms/room-familial-1-3.avif" alt="Détail Famille" data-cap-fr="Espace de vie familial" data-cap-en="Family living space">
+                <img src="images/rooms/room-familial-bath.avif" alt="Bain" data-cap-fr="Salle de bain familiale" data-cap-en="Family bathroom">
+                
+                <div class="absolute inset-0 flex items-center justify-between px-4 slider-nav z-20">
+                    <button onclick="changeSlide(this, -1)" class="w-10 h-10 bg-black/20 hover:bg-black/40 text-white rounded-full transition backdrop-blur-sm"><i class="fas fa-chevron-left text-xs"></i></button>
+                    <button onclick="changeSlide(this, 1)" class="w-10 h-10 bg-black/20 hover:bg-black/40 text-white rounded-full transition backdrop-blur-sm"><i class="fas fa-chevron-right text-xs"></i></button>
+                </div>
+                <div class="absolute bottom-6 left-6 z-30 flex items-end gap-4">
+                    <span class="room-legend bg-brand-dark/70 backdrop-blur-md text-white text-[10px] uppercase tracking-[0.2em] px-4 py-2 border-l-2 border-brand-gold">Suite Familiale</span>
+                    <span class="slide-counter text-[10px] text-white/50 font-medium mb-2 tracking-widest">1 / 4</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row min-h-[600px]">
+            <div class="w-full lg:w-1/2 relative min-h-[500px] room-slider group" data-current="0">
+                <img src="images/rooms/room-apartment-2.avif" alt="Appartement" class="active" data-cap-fr="Appartement Familial" data-cap-en="Family Apartment">
+                <img src="images/rooms/room-apartment.avif" alt="Chambre King" data-cap-fr="Chambre King Size" data-cap-en="King Size Bedroom">
+                <img src="images/rooms/room-apartment-bath.avif" alt="Bain" data-cap-fr="Salle de douche" data-cap-en="Shower room">
+                <img src="images/rooms/room-apartment-terrasse.avif" alt="Terrasse" data-cap-fr="Terrasse privée" data-cap-en="Private terrace">
+                
+                <div class="absolute inset-0 flex items-center justify-between px-4 slider-nav z-20">
+                    <button onclick="changeSlide(this, -1)" class="w-10 h-10 bg-black/20 hover:bg-black/40 text-white rounded-full transition backdrop-blur-sm"><i class="fas fa-chevron-left text-xs"></i></button>
+                    <button onclick="changeSlide(this, 1)" class="w-10 h-10 bg-black/20 hover:bg-black/40 text-white rounded-full transition backdrop-blur-sm"><i class="fas fa-chevron-right text-xs"></i></button>
+                </div>
+                <div class="absolute bottom-6 left-6 z-30 flex items-end gap-4">
+                    <span class="room-legend bg-brand-dark/70 backdrop-blur-md text-white text-[10px] uppercase tracking-[0.2em] px-4 py-2 border-l-2 border-brand-gold">Appartement Familial</span>
+                    <span class="slide-counter text-[10px] text-white/50 font-medium mb-2 tracking-widest">1 / 4</span>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2 flex items-center p-12 lg:p-24 bg-brand-cream reveal">
+                <div class="max-w-md mx-auto lg:mx-0">
+                    <div class="flex justify-between items-end mb-4">
+                        <span class="text-brand-gold uppercase tracking-[0.3em] text-[10px] font-bold">1 Appt. (5 pers.)</span>
+                        <span class="font-serif text-2xl text-brand-dark">205€</span>
+                    </div>
+                    <h3 class="text-4xl md:text-5xl font-serif italic mb-6">Appartement Familial</h3>
+                    <p class="font-light leading-relaxed mb-4 text-brand-olive/80" data-fr="Chambre parentale (lit king size), chambre enfants (3 lits simples), salle de douche et WC séparé. Terrasse privée." data-en="Master bedroom (king size bed), children's room (3 single beds), shower room and separate WC. Private terrace.">Chambre parentale (lit king size), chambre enfants (3 lits simples), salle de douche et WC séparé. Terrasse privée.</p>
+                    <span class="inline-block bg-brand-gold/10 text-brand-gold text-[9px] px-3 py-1 uppercase tracking-widest mb-8 border border-brand-gold/20" data-fr="Terrasse Privée" data-en="Private Terrace">Terrasse Privée</span>
+                    <br>
+                    <button onclick="openBooking()" class="text-[10px] uppercase tracking-[0.2em] font-bold border-b border-brand-dark pb-1">Réserver</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-brand-cream reveal">
+        <div class="max-w-[1200px] mx-auto px-6 grid md:grid-cols-3 gap-12 text-center">
+            <div>
+                <i class="fas fa-coffee text-brand-gold text-2xl mb-4"></i>
+                <h4 class="font-serif text-xl italic" data-fr="Petit-Déjeuner" data-en="Breakfast">Petit-Déjeuner</h4>
+                <p class="text-sm font-light text-brand-olive/70" data-fr="12€ / pers. Servi en salle ou terrasse selon météo." data-en="12€ / pers. Served in-room or on terrace weather permitting.">12€ / pers. Servi en salle ou terrasse selon météo.</p>
+            </div>
+            <div>
+                <i class="fas fa-clock text-brand-gold text-2xl mb-4"></i>
+                <h4 class="font-serif text-xl italic" data-fr="Check-in & Out" data-en="Check-in & Out">Check-in & Out</h4>
+                <p class="text-sm font-light text-brand-olive/70" data-fr="Arrivée : 15h-20h. Départ : 11h." data-en="Check-in: 3pm-8pm. Check-out: 11am.">Arrivée : 15h-20h. Départ : 11h.</p>
+            </div>
+            <div>
+                <i class="fas fa-exclamation-triangle text-brand-gold text-2xl mb-4"></i>
+                <h4 class="font-serif text-xl italic" data-fr="Suppléments" data-en="Supplements">Suppléments</h4>
+                <p class="text-xs font-light text-brand-olive/70 italic" data-fr="Animaux : 10€. Arrivée > 23h : 20€ / h." data-en="Pets: 10€. Arrival > 11pm: 20€ / hr.">Animaux : 10€. Arrivée > 23h : 20€ / h.</p>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="js/main.js"></script>
+    <script>
+        function initEnhancedSliders() {
+            const sliders = document.querySelectorAll('.room-slider');
+            sliders.forEach(slider => {
+                const images = slider.querySelectorAll('img');
+                if (images.length <= 1) return;
+                let autoCycle = setInterval(() => changeSlide(slider, 1, true), 5000);
+                slider.dataset.timer = autoCycle;
+            });
+        }
+
+        function changeSlide(btnOrSlider, direction, isAuto = false) {
+            const slider = btnOrSlider.closest ? btnOrSlider.closest('.room-slider') : btnOrSlider;
+            const images = slider.querySelectorAll('img');
+            const legend = slider.querySelector('.room-legend');
+            const counter = slider.querySelector('.slide-counter');
+            let current = parseInt(slider.dataset.current || 0);
+
+            if (!isAuto) {
+                clearInterval(slider.dataset.timer);
+                slider.dataset.timer = setInterval(() => changeSlide(slider, 1, true), 7000);
+            }
+
+            if(legend) legend.classList.add('fade-out');
+
+            setTimeout(() => {
+                images[current].classList.remove('active');
+                current = (current + direction + images.length) % images.length;
+                images[current].classList.add('active');
+                slider.dataset.current = current;
+
+                if(legend) {
+                    const cap = (currentLang === 'fr') ? images[current].dataset.capFr : images[current].dataset.capEn;
+                    legend.innerText = cap;
+                    legend.classList.remove('fade-out');
+                }
+                if(counter) counter.innerText = `${current + 1} / ${images.length}`;
+            }, 400);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initEnhancedSliders();
+            reveal();
+        });
+
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) { reveals[i].classList.add("active"); }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+    </script>
+</body>
+</html>
