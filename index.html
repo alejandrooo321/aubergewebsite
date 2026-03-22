@@ -16,6 +16,12 @@
     <script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
 
     <script>
+        if (localStorage.getItem('siteLang') === 'en') {
+            document.documentElement.classList.add('lang-en');
+        }
+    </script>
+
+    <script>
         tailwind.config = {
             theme: {
                 extend: {
@@ -102,7 +108,7 @@
             <div class="w-full md:w-[35%] p-6 md:p-8 flex items-center border-b md:border-b-0 md:border-r border-brand-olive/10 group cursor-pointer hover:bg-brand-cream/50 transition">
                 <div class="flex flex-col w-full">
                     <label class="text-[9px] uppercase tracking-[0.2em] text-brand-gold font-bold mb-2 cursor-pointer" data-fr="Arrivée" data-en="Check-in">Arrivée</label>
-                    <input id="date_deb" type="text" class="w-full bg-transparent focus:outline-none text-brand-olive font-serif text-2xl cursor-pointer" placeholder="Sélectionner..." readonly>
+                    <input id="date_deb" type="text" class="w-full bg-transparent focus:outline-none text-brand-olive font-serif text-2xl cursor-pointer" data-fr="Sélectionner..." data-en="Select date..." readonly>
                 </div>
                 <i class="far fa-calendar-alt text-brand-olive/20 text-2xl group-hover:text-brand-gold transition"></i>
             </div>
@@ -110,8 +116,7 @@
             <div class="w-full md:w-[35%] p-6 md:p-8 flex items-center group cursor-pointer hover:bg-brand-cream/50 transition">
                 <div class="flex flex-col w-full">
                     <label class="text-[9px] uppercase tracking-[0.2em] text-brand-gold font-bold mb-2 cursor-pointer" data-fr="Départ" data-en="Check-out">Départ</label>
-                    <input id="date_dep" type="text" class="w-full bg-transparent focus:outline-none text-brand-olive font-serif text-2xl cursor-pointer" placeholder="Sélectionner..." readonly>
-                </div>
+<input id="date_dep" type="text" class="w-full bg-transparent focus:outline-none text-brand-olive font-serif text-2xl cursor-pointer" data-fr="Sélectionner..." data-en="Select date..." readonly>                </div>
                 <i class="far fa-calendar-check text-brand-olive/20 text-2xl group-hover:text-brand-gold transition"></i>
             </div>
 

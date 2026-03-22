@@ -1,23 +1,29 @@
-// --- 1. Component Loader ---
+// --- 1. Global State & Language Persistence ---
+let currentLang = localStorage.getItem('siteLang') || 'fr';
+
+// --- 2. Component Loader ---
 async function loadComponents() {
     try {
-        // Load Nav
         const navRes = await fetch('components/nav.html');
-        document.getElementById('nav-placeholder').innerHTML = await navRes.text();
+        if (navRes.ok) {
+            const navHtml = await navRes.text();
+            document.getElementById('nav-placeholder').innerHTML = navHtml;
+        }
         
-        // Load Footer
         const footerRes = await fetch('components/footer.html');
-        document.getElementById('footer-placeholder').innerHTML = await footerRes.text();
-
-        // Initialize features after DOM is injected
-        initNavigation();
-        applyLanguage(currentLang);
+        if (footerRes.ok) {
+            const footerHtml = await footerRes.text();
+            document.getElementById('footer-placeholder').innerHTML = footerHtml;
+        }
     } catch (error) {
-        console.error("Error loading components. (Note: Fetch requires a local server like VS Code Live Server to work locally).", error);
+        console.warn("Local testing without server might block component loading.", error);
+    } finally {
+        initNavigation();
+        applyLanguage(currentLang); 
     }
 }
 
-// --- 2. Navigation & Mobile Menu Logic ---
+// --- 3. Navigation & Mobile Menu Logic ---
 let isMenuOpen = false;
 
 function initNavigation() {
@@ -28,61 +34,99 @@ function initNavigation() {
     const logoText = document.getElementById('logo-text');
     const navLinks = document.getElementById('nav-links');
 
-    // Set Active Link based on current URL
+    if (!mobileToggle || !mobileMenu || !nav) return;
+
+    // Active Link Logic
     const currentPage = window.location.pathname.split("/").pop() || "index.html";
     document.querySelectorAll('.nav-item').forEach(link => {
-        if (link.getAttribute('href') === currentPage) {
+        const href = link.getAttribute('href');
+        if (href === currentPage || (currentPage === '' && href === 'index.html')) {
             link.classList.add('text-brand-gold', 'after:w-full');
             link.classList.remove('hover:text-brand-gold', 'after:w-0');
         }
     });
 
-    // Mobile Hamburger Toggle
-    if (mobileToggle) {
-        mobileToggle.addEventListener('click', () => {
-            isMenuOpen = !isMenuOpen;
-            if (isMenuOpen) {
-                mobileMenu.classList.remove('pointer-events-none', 'opacity-0');
-                mobileMenu.classList.add('opacity-100');
-                mobileIcon.classList.remove('fa-bars');
-                mobileIcon.classList.add('fa-times');
-                nav.classList.add('bg-brand-dark');
-                document.body.style.overflow = 'hidden';
+    function updateNavState() {
+        if (isMenuOpen) {
+            // Menu is open: Force dark background and white text
+            nav.classList.remove('bg-brand-cream/95', 'backdrop-blur-md', 'shadow-sm', 'bg-gradient-to-b', 'from-brand-dark/70');
+            nav.classList.add('bg-brand-dark');
+            
+            logoText?.classList.replace('text-brand-dark', 'text-white');
+            navLinks?.classList.replace('text-brand-dark', 'text-white');
+            mobileToggle?.classList.replace('text-brand-dark', 'text-white');
+        } else {
+            // Menu is closed: Check scroll position
+            nav.classList.remove('bg-brand-dark');
+            
+            if (window.scrollY > 50) {
+                // Scrolled state
+                nav.classList.add('bg-brand-cream/95', 'backdrop-blur-md', 'py-4', 'shadow-sm');
+                nav.classList.remove('py-8', 'bg-gradient-to-b', 'from-brand-dark/70');
+                
+                logoText?.classList.replace('text-white', 'text-brand-dark');
+                navLinks?.classList.replace('text-white', 'text-brand-dark');
+                mobileToggle?.classList.replace('text-white', 'text-brand-dark');
             } else {
-                mobileMenu.classList.add('pointer-events-none', 'opacity-0');
-                mobileMenu.classList.remove('opacity-100');
-                mobileIcon.classList.remove('fa-times');
-                mobileIcon.classList.add('fa-bars');
-                nav.classList.remove('bg-brand-dark');
-                document.body.style.overflow = '';
+                // Top of page state
+                nav.classList.remove('bg-brand-cream/95', 'backdrop-blur-md', 'shadow-sm', 'py-4');
+                nav.classList.add('py-8', 'bg-gradient-to-b', 'from-brand-dark/70');
+                
+                logoText?.classList.replace('text-brand-dark', 'text-white');
+                navLinks?.classList.replace('text-brand-dark', 'text-white');
+                mobileToggle?.classList.replace('text-brand-dark', 'text-white');
             }
-        });
+        }
     }
 
-    // Scroll Effect (Blur & Solidify)
-    window.addEventListener('scroll', () => {
-        if (isMenuOpen) return;
-        if (window.scrollY > 50) {
-            nav.classList.add('bg-brand-cream/95', 'backdrop-blur-md', 'py-4', 'shadow-sm', 'border-transparent');
-            nav.classList.remove('py-8', 'border-white/10', 'bg-gradient-to-b', 'from-brand-dark/70', 'to-transparent');
-            logoText.classList.replace('text-white', 'text-brand-dark');
-            navLinks.classList.replace('text-white', 'text-brand-dark');
-            mobileToggle.classList.replace('text-white', 'text-brand-dark');
+    mobileToggle.addEventListener('click', () => {
+        isMenuOpen = !isMenuOpen;
+        
+        // 1. TEMPORARILY DISABLE NAV TRANSITION to prevent the crossfade glitch
+        nav.classList.remove('transition-all', 'duration-500');
+
+        if (isMenuOpen) {
+            mobileMenu.classList.remove('pointer-events-none', 'opacity-0');
+            mobileMenu.classList.add('pointer-events-auto', 'opacity-100');
+            mobileIcon.classList.replace('fa-bars', 'fa-times');
+            
+            // Prevent body jump when scrollbar disappears
+            document.body.style.paddingRight = window.innerWidth - document.documentElement.clientWidth + 'px';
+            document.body.style.overflow = 'hidden'; 
         } else {
-            nav.classList.remove('bg-brand-cream/95', 'backdrop-blur-md', 'shadow-sm', 'border-transparent');
-            nav.classList.add('py-8', 'border-white/10', 'bg-gradient-to-b', 'from-brand-dark/70', 'to-transparent');
-            logoText.classList.replace('text-brand-dark', 'text-white');
-            navLinks.classList.replace('text-brand-dark', 'text-white');
-            mobileToggle.classList.replace('text-brand-dark', 'text-white');
+            mobileMenu.classList.add('pointer-events-none', 'opacity-0');
+            mobileMenu.classList.remove('pointer-events-auto', 'opacity-100');
+            mobileIcon.classList.replace('fa-times', 'fa-bars');
+            
+            setTimeout(() => {
+                document.body.style.overflow = ''; 
+                document.body.style.paddingRight = '';
+            }, 300); 
         }
+
+        // 2. Apply the color changes instantly
+        updateNavState(); 
+
+        // 3. FORCE BROWSER REFLOW (This makes the browser register the instant color change)
+        void nav.offsetWidth;
+
+        // 4. RESTORE NAV TRANSITIONS for normal scrolling behavior
+        nav.classList.add('transition-all', 'duration-500');
     });
+
+    // Handle scroll events
+    window.addEventListener('scroll', () => {
+        if (!isMenuOpen) updateNavState();
+    });
+    
+    // Set initial configuration on page load
+    updateNavState();
 }
 
-// --- 3. Language Toggle ---
-let currentLang = 'fr';
-
+// --- 4. Language Logic ---
 function toggleLanguage() {
     currentLang = currentLang === 'fr' ? 'en' : 'fr';
+    localStorage.setItem('siteLang', currentLang); 
     applyLanguage(currentLang);
 }
 
@@ -97,19 +141,36 @@ function applyLanguage(lang) {
     
     document.querySelectorAll('[data-fr]').forEach(el => {
         const translation = el.getAttribute(`data-${lang}`);
-        if (translation) el.innerText = translation;
+        if (translation) {
+            if (el.tagName === 'INPUT') {
+                el.placeholder = translation; // Specifically targets Flatpickr placeholders
+            } else {
+                el.innerHTML = translation;
+            }
+        }
     });
 
-    if (typeof fpIn !== 'undefined') fpIn.set("locale", lang);
-    if (typeof fpOut !== 'undefined') fpOut.set("locale", lang);
+    if (typeof fpIn !== 'undefined' && fpIn.set) fpIn.set("locale", lang);
+    if (typeof fpOut !== 'undefined' && fpOut.set) fpOut.set("locale", lang);
+    
+    document.querySelectorAll('.room-slider').forEach(slider => {
+        const activeImg = slider.querySelector('img.active');
+        const legend = slider.querySelector('.room-legend');
+        if (activeImg && legend) {
+            const cap = lang === 'fr' ? activeImg.dataset.capFr : activeImg.dataset.capEn;
+            if(cap) legend.innerText = cap;
+        }
+    });
 }
 
-// --- 4. Flatpickr Booking Engine (Only initialize if dates exist on page) ---
+// --- 5. Flatpickr & Booking Logic ---
 let fpIn, fpOut;
 document.addEventListener('DOMContentLoaded', () => {
+    applyLanguage(currentLang);
+
     if (document.getElementById('date_deb')) {
         fpIn = flatpickr("#date_deb", {
-            locale: "fr",
+            locale: currentLang,
             dateFormat: "d/m/Y",
             minDate: "today",
             disableMobile: "true",
@@ -123,101 +184,55 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         fpOut = flatpickr("#date_dep", {
-            locale: "fr",
+            locale: currentLang,
             dateFormat: "d/m/Y",
             minDate: "today",
             disableMobile: "true"
         });
 
-        document.getElementById('submit-booking').addEventListener('click', function(e) {
-            e.preventDefault();
-            const checkIn = document.getElementById('date_deb').value;
-            const checkOut = document.getElementById('date_dep').value;
-            const langParam = currentLang === 'fr' ? 'francais' : 'anglais';
-            let url = `https://www.secure-direct-hotel-booking.com/module_booking_engine/index.php?id_etab=8ffd3c41ad9373babc9fa6b9957e6788&langue=${langParam}`;
-            if (checkIn) url += `&date_deb=${checkIn}`;
-            if (checkOut) url += `&date_dep=${checkOut}`;
-            window.open(url, '_blank');
-        });
+        const submitBtn = document.getElementById('submit-booking');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                openBooking(); 
+            });
+        }
     }
-    
-    // Initial Reveal Trigger
     reveal(); 
 });
 
-// --- 5. Scroll Reveal Elements ---
+// --- 6. Global Booking Function ---
+function openBooking(categoryId = null) {
+    const langParam = currentLang === 'fr' ? 'francais' : 'anglais';
+    const etabID = "8ffd3c41ad9373babc9fa6b9957e6788";
+    
+    const dateIn = document.getElementById('date_deb')?.value || "";
+    const dateOut = document.getElementById('date_dep')?.value || "";
+    
+    let url = `https://www.secure-direct-hotel-booking.com/module_booking_engine/index.php?id_etab=${etabID}&langue=${langParam}`;
+    
+    if (dateIn && dateOut) {
+        url += `&date_deb=${dateIn}&date_dep=${dateOut}`;
+    }
+    if (categoryId) {
+        url += `&id_categorie=${categoryId}`;
+    }
+    
+    window.open(url, '_blank');
+}
+
+// --- 7. Reveal on Scroll ---
 function reveal() {
     var reveals = document.querySelectorAll(".reveal");
     for (var i = 0; i < reveals.length; i++) {
         var windowHeight = window.innerHeight;
         var elementTop = reveals[i].getBoundingClientRect().top;
-        var elementVisible = 100;
-        if (elementTop < windowHeight - elementVisible) {
+        if (elementTop < windowHeight - 100) {
             reveals[i].classList.add("active");
         }
     }
 }
 window.addEventListener("scroll", reveal);
 
-// Start Execution
+// --- START EXECUTION ---
 loadComponents();
-
-// Function to handle booking redirects with dates and category IDs
-function openBooking(categoryId = null) {
-    const langParam = currentLang === 'fr' ? 'francais' : 'anglais';
-    const etabID = "8ffd3c41ad9373babc9fa6b9957e6788";
-    
-    // 1. Grab dates from the Hotel Page inputs
-    const dateIn = document.getElementById('date_deb').value;
-    const dateOut = document.getElementById('date_dep').value;
-    
-    // 2. Build the URL
-    let url = `https://www.secure-direct-hotel-booking.com/module_booking_engine/index.php?id_etab=${etabID}&langue=${langParam}`;
-    
-    // 3. Add dates if selected
-    if (dateIn && dateOut) {
-        url += `&date_deb=${dateIn}&date_dep=${dateOut}`;
-    }
-    
-    // 4. Add the specific room category ID
-    if (categoryId) {
-        url += `&id_categorie=${categoryId}`;
-    }
-    
-    // 5. Open the window
-    window.open(url, '_blank');
-}
-
-
-function startSliders() {
-    const sliders = document.querySelectorAll('.room-slider');
-    
-    sliders.forEach(slider => {
-        const images = slider.querySelectorAll('img');
-        const legend = slider.querySelector('.room-legend');
-        if (images.length <= 1) return;
-
-        let current = 0;
-
-        setInterval(() => {
-            // 1. Start fading out the current legend text
-            if (legend) legend.classList.add('fade-out');
-
-            setTimeout(() => {
-                // 2. Switch the image
-                images[current].classList.remove('active');
-                current = (current + 1) % images.length;
-                images[current].classList.add('active');
-
-                // 3. Update the legend text based on language
-                if (legend) {
-                    const nextCap = currentLang === 'fr' 
-                        ? images[current].getAttribute('data-caption-fr') 
-                        : images[current].getAttribute('data-caption-en');
-                    legend.innerText = nextCap;
-                    legend.classList.remove('fade-out');
-                }
-            }, 500); // Small delay to sync with image transition
-        }, 4000); // Cycle every 4 seconds
-    });
-}

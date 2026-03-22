@@ -13,6 +13,12 @@
         tailwind.config = { theme: { extend: { colors: { 'brand-gold': '#b08d57', 'brand-dark': '#141515', 'brand-cream': '#fbfaf8', 'brand-olive': '#2a2f2c' }, fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Cormorant Garamond', 'serif'] } } } }
     </script>
 
+    <script>
+        if (localStorage.getItem('siteLang') === 'en') {
+            document.documentElement.classList.add('lang-en');
+        }
+    </script>
+
     <style>
         .hero-zoom {
             /* Smart Gradient & Local Image Placeholder */
